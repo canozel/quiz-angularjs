@@ -1,0 +1,37 @@
+[
+    {
+        "id": 0,
+        "title": "Soru 1",
+        "question": "Eski Roma'da gladyatör dövüşlerinin yapıldığı 'arena'nın kelime anlamı nedir?",
+        "options" : [{"id": 1, "name": "Kavga"},{"id": 2, "name": "Kum"},{"id": 3, "name": "Kan"},{"id": 4, "name": "Kılıç"}],
+        "answer" : 2
+    },
+    {
+        "id": "1",
+        "title": "Soru 2",
+        "question": "“Sezar’ın hakkı Sezar’a” sözü kime aittir?",
+        "options" : [{"id": 1, "name": " Hz. İsa"},{"id": 2, "name": "Büyük İskender"},{"id": 3, "name": "Jül Sezar"},{"id": 4, "name": "Hz. Ömer"}],
+        "answer" : 1
+    },
+    {
+        "id": 2,
+        "title": "Soru 3",
+        "question": "“Onun sayesinde” sözündeki “saye” nin kelime anlamı nedir?",
+        "options" : [{"id": 1, "name": "Rüzgar"},{"id": 2, "name": "Koltuk"},{"id": 3, "name": "Merdiven"},{"id": 4, "name": "Gölge"}],
+        "answer" : 4
+    },
+    {
+        "id": 3,
+        "title": "Soru 4",
+        "question": "Efsaneye göre çift olarak yaratılan insanlar kim tarafından ayrılarak hayatları boyunca “ruh eşleri”ni aramakla cezalandırılmışlardır?",
+        "options" : [{"id": 1, "name": "Zeus"},{"id": 2, "name": "Apollon"},{"id": 3, "name": "Hermes"},{"id": 4, "name": "Metis"}],
+        "answer" : 1
+    },
+    {
+        "id": 4,
+        "title": "Soru 5",
+        "question": "Efsaneye göre çift olarak yaratılan insanlar kim tarafından ayrılarak hayatları boyunca “ruh eşleri”ni aramakla cezalandırılmışlardır?",
+        "options" : [{"id": 1, "name": "Zeus"},{"id": 2, "name": "Apollon"},{"id": 3, "name": "Hermes"},{"id": 4, "name": "Metis"}],
+        "answer" : 1
+    }
+]
