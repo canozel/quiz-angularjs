@@ -35,26 +35,16 @@
               <div class="panel-body">
                 <strong>Sorular</strong>
                 <div class="list-group" ng-init="currentTab = 0; class = false">
-                  <a ng-repeat="question in questions " class="list-group-item {{addClass(class)}}" ng-class="" ng-click="onClickTab(question)">
-                    <h4>{{question.title}}</h4>
+                  <a ng-repeat="question in questions "   ng-class="{'list-group-item':true, 'active':(currentTab == question.id),
+                                                                     'list-group-item-success':(answers[question.id]!= null),
+                                                                     'list-group-item-warning':(answers[question.id] == null)}"
+                                                          ng-click="onClickTab(question)">
+                    {{question.title}}
+                    <span ng-class="{'glyphicon glyphicon-pencil':(currentTab == question.id)}" ></span>
+                    <span ng-class="{'glyphicon glyphicon-ok-circle':(answers[question.id] != null) && (currentTab != question.id)}" ></span>
+                    <span ng-class="{'glyphicon glyphicon-ban-circle':(answers[question.id]== null) && (currentTab != question.id)}"></span>
+                    <!--span ng-class="{'glyphicon glyphicon-refresh':again}" ></span-->
                   </a>
-                  <div>
-                    <!--a href="#" class="list-group-item list-group-item-success">Soru 1 
-                                    <span class="glyphicon glyphicon-ok-circle" ></span>
-                                    <span class="glyphicon glyphicon-refresh" ></span>
-                                  </a>
-                                  <a href="#" class="list-group-item list-group-item-success">Soru 2 <span class="glyphicon glyphicon-ok-circle" ></span></a>
-                                  <a href="#" class="list-group-item list-group-item-success">Soru 3 
-                                    <span class="glyphicon glyphicon-ok-circle" ></span>
-                                    <span class="glyphicon glyphicon-refresh" ></span>
-                                  </a>
-                                  <a href="#" class="list-group-item active">Soru 4 
-                                    <span class="glyphicon glyphicon-pencil" ></span>
-                                  </a>
-                                  <a href="#" class="list-group-item list-group-item-warning">Soru 5 
-                                    <span class="glyphicon glyphicon-ban-circle" ></span>
-                                  </a-->
-                  </div>
                 </div>
               </div>
             </div>
@@ -65,34 +55,35 @@
             <div class="panel panel-default">
               <div class="panel-heading">{{questions[currentTab].title}}
                 <span class="glyphicon glyphicon-pencil"></span>
-                <input type="checkbox">Tekrardan gözat
+                <input type="checkbox" ng-click="again()">Tekrardan gözat
               </div>
               <div class="panel-body">
                 <div class="tab-content">
                   <mark>{{questions[currentTab].question}}</mark>
                   <div class="radio" ng-repeat="option in (questions[currentTab].options)">
-                    <label><input type="radio" name=" k" ng-click="class= true"ng-model="l"  ng-value="option"  />
+                    <label><input type="radio" name="option" ng-model="$parent.model" ng-change="selected($parent.model.id,currentTab)" ng-init="$index==answers[currentTab]?($parent.model=option):''" ng-value="option"  />
                     {{option.name}}</label>
                   </div>
                 </div>
               </div>
+              
               <nav>
                 <ul class="pager">
-                  <li><a href="#" ng-click="onClickPB(currentTab)" ng-disabled="k">Önceki Soru </a></li>
+                  <li><a href="#" ng-click="onClickPB(currentTab)">Önceki Soru </a></li>
                   <li><a href="#" ng-click="onClickNB(currentTab, questions.length)">Sonraki Soru</a></li>
                 </ul>
               </nav>
             </div>
           </div>
 
-          <!--Sınav Durumu  -->
+          <!--Sınav sonlandır  -->
           <div class="col-md-3">
             <div class="panel panel-default">
               <div class="panel-heading">Sınavı Sonlandır</div>
               <div class="panel-body">
                 <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-eye-open"></span> Sınavı Gözden Geçir ve Bitir</button>
                 <hr>
-                <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-ok"></span> Sınavı Bitir</button>
+                <button type="button" class="btn btn-danger" ng-click="end()"><span class="glyphicon glyphicon-ok"></span> Sınavı Bitir</button>
               </div>
             </div>
           </div>
@@ -103,18 +94,18 @@
               <div class="panel-heading">Sınav Durumu</div>
               <div class="panel-body">
                 <div class="progress">
-                  <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
-                    Sınavınızın %60 ını tamamladınız
+                  <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: {{(100/questions.length)*answered()}}%">
+                    <p class="text-danger"> %{{(100/questions.length)*answered()}} </p>
                   </div>
                 </div>
                 <button class="btn btn-primary" type="button">
-                  Toplam Soru Sayısı <span class="badge">5</span>
+                  Toplam Soru Sayısı <span class="badge">{{questions.length}}</span>
                 </button>
                 <button class="btn btn-success" type="button">
-                  Cevaplanmış Soru Sayısı <span class="badge">3</span>
+                  Cevaplanmış Soru Sayısı <span class="badge">{{answered()}}</span>
                 </button>
                 <button class="btn btn-warning" type="button">
-                  Boş Soru Sayısı <span class="badge">2</span>
+                  Boş Soru Sayısı <span class="badge">{{questions.length - answered()}}</span>
                 </button>
               </div>
             </div>
@@ -125,6 +116,26 @@
       <!-- /container -->
     </div>
   </div>
+  
+  <script type="text/ng-template" id="modal.html">
+         <div class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" ng-click="close('Cancel')" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Yes or No?</h4>
+              </div>
+              <div class="modal-body">
+                <p>It's your call...</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" ng-click="close('No')" class="btn btn-default" data-dismiss="modal">No</button>
+                <button type="button" ng-click="close('Yes')" class="btn btn-primary" data-dismiss="modal">Yes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+     </script>
 </body>
 
 </html>
