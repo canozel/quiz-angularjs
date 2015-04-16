@@ -7,7 +7,7 @@
         "answer" : 2
     },
     {
-        "id": "1",
+        "id": 1,
         "title": "Soru 2",
         "question": "“Sezar’ın hakkı Sezar’a” sözü kime aittir?",
         "options" : [{"id": 1, "name": " Hz. İsa"},{"id": 2, "name": "Büyük İskender"},{"id": 3, "name": "Jül Sezar"},{"id": 4, "name": "Hz. Ömer"}],
@@ -30,8 +30,8 @@
     {
         "id": 4,
         "title": "Soru 5",
-        "question": "Efsaneye göre çift olarak yaratılan insanlar kim tarafından ayrılarak hayatları boyunca “ruh eşleri”ni aramakla cezalandırılmışlardır?",
-        "options" : [{"id": 1, "name": "Zeus"},{"id": 2, "name": "Apollon"},{"id": 3, "name": "Hermes"},{"id": 4, "name": "Metis"}],
+        "question": "Dünyanın ilk haritasını çizen ünlü Türk denizcisi kimdir?",
+        "options" : [{"id": 1, "name": "Piri Reis"},{"id": 2, "name": "Çaka Beyi"},{"id": 3, "name": "Fatih Sultan Süleyman"},{"id": 4, "name": "Picasso"}],
         "answer" : 1
     }
 ]
