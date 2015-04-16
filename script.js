@@ -2,12 +2,29 @@
 
 // Code goes here
 angular.module('sinav', ['ui.bootstrap']);
-angular.module('sinav').controller('sinavapp', function($scope, $http, $modal, $log) {
+angular.module('sinav').controller('sinavapp', function($scope, $http, $modal, $log, $timeout) {
 
   $http.get('exam.json').success(function(data) {
     $scope.questions = data;
   });
-
+  
+  $scope.accept = false;
+  $scope.counter = 60; //sınav süresi
+  $scope.onTimeout = function(){
+      $scope.counter--;
+      if ($scope.counter == 0){
+        $scope.accept = true;
+        $scope.end();
+      }
+      mytimeout = $timeout($scope.onTimeout,1000);
+  }
+  
+  var mytimeout = $timeout($scope.onTimeout,1000);
+  
+  $scope.stop = function(){
+      $timeout.cancel(mytimeout);
+  }
+  
   $scope.onClickTab = function(question) {
     $scope.currentTab = question.id;
   }
@@ -23,28 +40,28 @@ angular.module('sinav').controller('sinavapp', function($scope, $http, $modal, $
       $scope.currentTab = currentTab - 1;
     }
   }
-
+  
   $scope.answers = [];
-  $scope.selected = function(ans, currentTab) {
-    $scope.answers[currentTab] = ans - 1;
+  $scope.selected = function(ans,currentTab){
+    $scope.answers[currentTab] = ans-1;
   }
-
-  $scope.answered = function() {
+  
+  $scope.answered = function(){
     var count = 0;
-    for (i = 0; i < $scope.answers.length; i++) {
-      if ($scope.answers[i] != null) {
+    for (i = 0; i < $scope.answers.length; i++) { 
+      if ($scope.answers[i] != null){
         count += 1;
       }
     }
-    return count;
+    return count; 
+  }
+  
+  $scope.again = function(){
+    $scope.again = false 
   }
 
-  $scope.again = function() {
-    $scope.again = false
-  }
-
-  $scope.end = function(size) {
-
+  $scope.end = function(size){
+    
     //modal
     var modalInstance = $modal.open({
       templateUrl: 'myModalContent.html',
@@ -52,47 +69,55 @@ angular.module('sinav').controller('sinavapp', function($scope, $http, $modal, $
       size: size,
       backdrop: 'static',
       resolve: {
-        answers: function() {
-          return $scope.answers;
-        },
+        answers: function () {
+          return $scope.answers;},
         questions: function() {
-          return $scope.questions;
-        },
-        answered: function() {
-          return $scope.answered();
-        }
+          return $scope.questions;},
+        answered: function () {
+          return $scope.answered();},
+        accept: function () {
+          return $scope.accept;}
       }
     });
   }
 });
 
 //modal
-angular.module('sinav').controller('ModalInstanceCtrl', function($scope, $modalInstance, $window, answers, questions, answered) {
-  $scope.accept = false;
+angular.module('sinav').controller('ModalInstanceCtrl', function ($scope, $modalInstance, $window,accept, answers, questions, answered) {
+  $scope.accept = accept;
   $scope.answers = answers;
   $scope.questions = questions;
   $scope.answered = answered;
-
-  $scope.ok = function() {
+  if(accept == true){
+        $scope.correct = 0;
+    $scope.empty = 5
+    var sum = 0 ;
+    var empty = 0;
+    for (i = 0; i < $scope.answers.length; i++) { 
+      if ($scope.answers[i] == $scope.questions[i].answer - 1){
+        sum += 1;}
+    }
+    $scope.correct = sum;
+  }
+  
+  $scope.ok = function () {
     $scope.accept = true;
-
+    
     $scope.correct = 0;
     $scope.empty = 5
-    var sum = 0;
+    var sum = 0 ;
     var empty = 0;
-    for (i = 0; i < $scope.answers.length; i++) {
-      if ($scope.answers[i] == $scope.questions[i].answer - 1) {
-        sum += 1;
-      }
+    for (i = 0; i < $scope.answers.length; i++) { 
+      if ($scope.answers[i] == $scope.questions[i].answer - 1){
+        sum += 1;}
     }
     $scope.correct = sum;
   };
 
-  $scope.cancel = function() {
-    if ($scope.accept) {
+  $scope.cancel = function () {
+    if ($scope.accept){
       $window.location.reload();
-    } else {
-      $modalInstance.dismiss('cancel');
-    }
+    }else{
+      $modalInstance.dismiss('cancel');}
   };
 });

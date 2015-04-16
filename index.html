@@ -13,6 +13,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
     <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.js"></script>
     <script src="script.js"></script>
+    <script src="time.js"></script>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
   </head>
@@ -23,6 +24,7 @@
       <div class="panel panel-default">
         <div class="panel-heading">
           <img src="http://i.imgur.com/WNkXabA.png" width="250" height="30"></img>
+          <span  class="pull-right">Kalan Süre : {{counter>0 ? counter : 0}} sn</span>
         </div>
         <div class="panel-body">
           <!--Navbar -->
@@ -70,9 +72,8 @@
   
                 <nav>
                   <ul class="pager">
-                    <li><a href="#" ng-click="onClickPB(currentTab)">Önceki Soru </a>
-                    </li>
-                    <li><a href="#" ng-click="onClickNB(currentTab, questions.length)">Sonraki Soru</a>
+                    <li><a class="btn" ng-disabled="currentTab == 0" ng-click="onClickPB(currentTab)">Önceki Soru </a></li>
+                    <li><a class="btn" ng-disabled="currentTab == questions.length -1"  ng-click="onClickNB(currentTab, questions.length)">Sonraki Soru</a>
                     </li>
                   </ul>
                 </nav>
@@ -89,7 +90,7 @@
                     <!--modal-->
                   <script type="text/ng-template" id="myModalContent.html">
                     <div class="modal-header">
-                        <h3 class="modal-title"></h3>
+                        <h3 ng-show="{{counter < 1}}" class="modal-title">Sınav süreniz doldu</h3>
                     </div>
                     <div class="modal-body">
                         <h4 ng-hide="accept">Sınavı bitirmek istediğinize emin misiniz?</h4>
