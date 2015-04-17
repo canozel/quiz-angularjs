@@ -37,16 +37,20 @@
               <div class="panel panel-default">
                 <div class="panel-body">
                   <strong>Sorular</strong>
-                  <div class="list-group" ng-init="currentTab = 0; class = false">
-                    <a ng-repeat="question in questions " ng-class="{'list-group-item':true, 'active':(currentTab == question.id),
-                                                                       'list-group-item-success':(answers[question.id]!= null),
-                                                                       'list-group-item-warning':(answers[question.id] == null)}" ng-click="onClickTab(question)">
-                      {{question.title}}
-                      <span ng-class="{'glyphicon glyphicon-pencil':(currentTab == question.id)}" ></span>
+                  <div  ng-init="currentTab = 0; class = false">
+                    <button  type="button"  ng-repeat="question in questions " 
+                                                ng-show= "show(question.id)"
+                                                
+                                                            ng-class="{'btn ':true, 'active':(currentTab == question.id),
+                                                                       'btn-success':(answers[question.id] != null),
+                                                                       'btn-default':(answers[question.id] == null)}" ng-click="onClickTab(question)">
+                      {{question.id + 1}}
+                      <span ng-class="{' glyphicon glyphicon-pencil':(currentTab == question.id)}" ></span>
                       <span ng-class="{'glyphicon glyphicon-ok-circle':(answers[question.id] != null) && (currentTab != question.id)}" ></span>
                       <span ng-class="{'glyphicon glyphicon-ban-circle':(answers[question.id]== null) && (currentTab != question.id)}"></span>
                       <!--span ng-class="{'glyphicon glyphicon-refresh':again}" ></span-->
-                    </a>
+                    </button>
+                    
                   </div>
                 </div>
               </div>
@@ -90,10 +94,10 @@
                     <!--modal-->
                   <script type="text/ng-template" id="myModalContent.html">
                     <div class="modal-header">
-                        <h3 ng-show="{{counter < 1}}" class="modal-title">Sınav süreniz doldu</h3>
+                        <h2 ng-show="{{accept && (correct < 1)}}" class="modal-title">Sınav süreniz doldu</h2>
                     </div>
                     <div class="modal-body">
-                        <h4 ng-hide="accept">Sınavı bitirmek istediğinize emin misiniz?</h4>
+                        <h4 ng-hide="accept">{{(questions.length - answered) == 0 ? 'Sınavı bitirmek istediğinize emin misiniz?' :  questions.length - answered + ' adet cevaplanmamış sorunuz var. Yinede sınavı bitirmek istiyor musunuz?'}} </h4>
                         <div ng-show="accept">
                           <h4>Doğru Sayısı : {{correct}}</h4>
                           <h4>Yanlış Sayısı : {{answered - correct }}</h4>
@@ -123,13 +127,13 @@
                       <p class="text-danger">%{{(100/questions.length)*answered()}}</p>
                     </div>
                   </div>
-                  <button class="btn btn-primary" type="button">
+                  <button class="btn btn-primary" ng-click="cevaplanmis = true; bos = true" type="button">
                     Toplam Soru Sayısı <span class="badge">{{questions.length}}</span>
                   </button>
-                  <button class="btn btn-success" type="button">
+                  <button class="btn btn-success" ng-click="cevaplanmis = true; bos = false" type="button">
                     Cevaplanmış Soru Sayısı <span class="badge">{{answered()}}</span>
                   </button>
-                  <button class="btn btn-warning" type="button">
+                  <button class="btn btn-warning" ng-click="bos = true; cevaplanmis = false" type="button">
                     Boş Soru Sayısı <span class="badge">{{questions.length - answered()}}</span>
                   </button>
                 </div>

@@ -9,7 +9,7 @@ angular.module('sinav').controller('sinavapp', function($scope, $http, $modal, $
   });
   
   $scope.accept = false;
-  $scope.counter = 60; //sınav süresi
+  $scope.counter = 600; //sınav süresi
   $scope.onTimeout = function(){
       $scope.counter--;
       if ($scope.counter == 0){
@@ -38,6 +38,13 @@ angular.module('sinav').controller('sinavapp', function($scope, $http, $modal, $
   $scope.onClickPB = function(currentTab, length) {
     if (currentTab > 0) {
       $scope.currentTab = currentTab - 1;
+    }
+  }
+  $scope.show = function(i){
+    if($scope.answers[i] != null && $scope.cevaplanmis){
+      return true;
+    }else if($scope.answers[i] == null && $scope.bos){
+      return true;
     }
   }
   
