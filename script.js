@@ -8,13 +8,18 @@ angular.module('sinav').controller('sinavapp', function($scope, $http, $modal, $
     $scope.questions = data;
   });
   
+  $scope.date = new Date();
+  $scope.cevaplanmis = true;
+  $scope.bos = true;
   $scope.accept = false;
   $scope.counter = 600; //sınav süresi
   $scope.onTimeout = function(){
-      $scope.counter--;
       if ($scope.counter == 0){
+        $scope.counter = -1;
         $scope.accept = true;
         $scope.end();
+      }else if($scope.counter > 0){
+        $scope.counter--;
       }
       mytimeout = $timeout($scope.onTimeout,1000);
   }
@@ -68,7 +73,7 @@ angular.module('sinav').controller('sinavapp', function($scope, $http, $modal, $
   }
 
   $scope.end = function(size){
-    
+    $scope.counter = -1;
     //modal
     var modalInstance = $modal.open({
       templateUrl: 'myModalContent.html',

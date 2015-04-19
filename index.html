@@ -10,12 +10,35 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.8.3/angular-material.min.css">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
     <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.js"></script>
     <script src="script.js"></script>
-    <script src="time.js"></script>
+    <script src="TimeCircles.js"></script>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href="style.css" rel="stylesheet">
+    <link href="TimeCircles.css" rel="stylesheet">
+    <script type="text/javascript">
+      $(function() {
+        $(".example").TimeCircles({
+          "count_past_zero": false,
+          "animation": "smooth",
+          "bg_width": 0.2,
+          "fg_width": 0.02666666666666667,
+          "circle_bg_color": "#60686F",
+          "time": {
+            "Days": {"show": false},
+            "Hours": {"show": false},
+            "Minutes": {
+              "text": "Dakika",
+              "color": "#617fdb",
+              "show": true},
+            "Seconds": {
+              "text": "Saniye",
+              "color": "#df6d6d",
+              "show": true}}
+        });
+      });
+    </script>
   </head>
   
   <body ng-controller="sinavapp">
@@ -24,7 +47,7 @@
       <div class="panel panel-default">
         <div class="panel-heading">
           <img src="http://i.imgur.com/WNkXabA.png" width="250" height="30"></img>
-          <span  class="pull-right">Kalan Süre : {{counter>0 ? counter : 0}} sn</span>
+          <span  class="pull-right">{{date | date:'h:mm'}}</span>
         </div>
         <div class="panel-body">
           <!--Navbar -->
@@ -36,14 +59,18 @@
             <div class="col-md-2">
               <div class="panel panel-default">
                 <div class="panel-body">
-                  <strong>Sorular</strong>
-                  <div  ng-init="currentTab = 0; class = false">
+                  <strong>
+                    {{cevaplanmis == true && bos == true ? 'Tüm Sorular': ''}}
+                    {{cevaplanmis == true && bos == false ? 'Cevaplanmış Sorular': ''}}
+                    {{cevaplanmis == false && bos == true ? 'Boş Sorular': ''}}
+                  </strong>
+                  <div  ng-init="currentTab = 0; class = false" ;>
                     <button  type="button"  ng-repeat="question in questions " 
-                                                ng-show= "show(question.id)"
-                                                
-                                                            ng-class="{'btn ':true, 'active':(currentTab == question.id),
-                                                                       'btn-success':(answers[question.id] != null),
-                                                                       'btn-default':(answers[question.id] == null)}" ng-click="onClickTab(question)">
+                                            ng-show= "show(question.id)"
+                                            ng-click="onClickTab(question)"
+                                            ng-class="{'btn ':true, 'active':(currentTab == question.id),
+                                                       'btn-success':(answers[question.id] != null),
+                                                       'btn-default':(answers[question.id] == null)}">
                       {{question.id + 1}}
                       <span ng-class="{' glyphicon glyphicon-pencil':(currentTab == question.id)}" ></span>
                       <span ng-class="{'glyphicon glyphicon-ok-circle':(answers[question.id] != null) && (currentTab != question.id)}" ></span>
@@ -59,7 +86,7 @@
             <!--Soru içeriği  -->
             <div class="col-md-7">
               <div class="panel panel-default">
-                <div class="panel-heading">{{questions[currentTab].title}}
+                <div class="panel-heading">Soru {{questions[currentTab].id + 1}}
                   <span class="glyphicon glyphicon-pencil"></span>
                   <input type="checkbox" ng-click="again()">Tekrardan gözat
                 </div>
@@ -89,7 +116,8 @@
               <div class="panel panel-default">
                 <div class="panel-heading">Sınavı Sonlandır</div>
                 <div class="panel-body">
-                  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-eye-open"></span> Sınavı Gözden Geçir ve Bitir</button>
+                  
+                  <div class="example" data-timer="{{counter}}"></div>
                   <hr>
                     <!--modal-->
                   <script type="text/ng-template" id="myModalContent.html">
@@ -112,7 +140,7 @@
                         <button ng-show="accept" class="btn btn-warning" ng-click="cancel()">Sınavı Tekrarla</button>
                     </div>
                   </script> <!--modal-->                 
-                  <button type="button" class="btn btn-danger" ng-click="end()"><span class="glyphicon glyphicon-ok"></span> Sınavı Bitir</button>
+                  <button type="button" class="btn btn-danger" ng-click="end('lg')"><span class="glyphicon glyphicon-ok"></span> Sınavı Bitir</button>
                 </div>
               </div>
             </div>
@@ -128,22 +156,20 @@
                     </div>
                   </div>
                   <button class="btn btn-primary" ng-click="cevaplanmis = true; bos = true" type="button">
-                    Toplam Soru Sayısı <span class="badge">{{questions.length}}</span>
+                    Tüm Sorular <span class="badge">{{questions.length}}</span>
                   </button>
                   <button class="btn btn-success" ng-click="cevaplanmis = true; bos = false" type="button">
-                    Cevaplanmış Soru Sayısı <span class="badge">{{answered()}}</span>
+                    Cevaplanmış Sorular <span class="badge">{{answered()}}</span>
                   </button>
                   <button class="btn btn-warning" ng-click="bos = true; cevaplanmis = false" type="button">
-                    Boş Soru Sayısı <span class="badge">{{questions.length - answered()}}</span>
+                    Boş Sorular <span class="badge">{{questions.length - answered()}}</span>
                   </button>
                 </div>
               </div>
             </div>
           </div>
-  
         </div>
-        <!-- /container -->
       </div>
-    </div>
+    </div><!-- /container -->
   </body>
 </html>

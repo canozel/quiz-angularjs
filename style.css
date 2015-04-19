@@ -1,1 +1,5 @@
-/* Styles go here */
+.example {
+    width: 400px;
+    height: 100px;
+    margin-bottom: 10px;
+}
